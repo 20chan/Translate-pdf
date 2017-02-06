@@ -3,7 +3,7 @@
 
 
 
-## A guide to convolution arithmetic for deep learning
+## [A guide to convolution arithmetic for deep learning](/A guide to convolution arithmetic for deep learning)
 
 [원본 pdf](https://arxiv.org/abs/1603.07285)
 
