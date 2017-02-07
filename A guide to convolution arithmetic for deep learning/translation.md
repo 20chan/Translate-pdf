@@ -2,10 +2,11 @@
 
 ##소개
 
-Deep convolutional nerual networks (CNNs)은 딥러닝의 진보의 핵심이었습니다. CNNs이 글자 인식작업의 9할에 사용되었음에도 불구하고 현재의 다양한 작업들은 훨씬 최근에, deep CNN이 ImageNet 이미지 인식 첼린지☆에서 챔피언을 먹을때 나오게 되었습니다.
-따라서 Convolutional neural networks는 머신러닝을 배우는 사람들에겐 매우 편리한 도구가 되었습니다. 하지만, 처음으로 CNNs를 배우는건 일반적으로 어려운 경험입니다. Convolutional layer의 output의 형태는 이의 input의 형태, kernel shape, zero padding과 strides, 그리고 이의 속성들 사이의 관계가 trivial인지 infer인지에 영향을 받는다. 이건 output size가 input size와 전혀 상관 없는 fully-connected layers와 비교된다. 게다가, CNN은 fully-connected network와는 또 다른 수준의 복잡성을 가지는, pooling stage를 가지기도 합니다. 마지막으로, transposed convolutional layers (fractionally strided convolutional layers로도 알려져 있음)은 최근에 더 많은 작업에 사용되어지고 있고, 이 convolutional layers과의 관계는 딱히 명확하게 설명이 되질 않는다.
+Deep convolutional nerual networks (CNNs)은 딥러닝의 진보의 핵심이었다.. CNNs이 글자 인식작업의 9할에 사용되었음에도 불구하고 현재의 다양한 작업들은 훨씬 최근에, deep CNN이 ImageNet 이미지 인식 첼린지☆에서 챔피언을 먹을때 나오게 되었다.
+따라서 Convolutional neural networks는 머신러닝을 배우는 사람들에겐 매우 편리한 도구가 되었다. 하지만, 처음으로 CNNs를 배우는건 일반적으로 어려운 경험이다. Convolutional layer의 output의 형태는 이의 input의 형태, kernel shape, zero padding과 strides, 그리고 이의 속성들 사이의 관계가 trivial인지 infer인지에 영향을 받는다. 이건 output size가 input size와 전혀 상관 없는 fully-connected layers와 비교된다. 게다가, CNN은 fully-connected network와는 또 다른 수준의 복잡성을 가지는, pooling stage를 가지기도 한다. 마지막으로, transposed convolutional layers (fractionally strided convolutional layers로도 알려져 있음)은 최근에 더 많은 작업에 사용되어지고 있고, 이 convolutional layers과의 관계는 딱히 명확하게 설명이 되질 않는다.
 
 이 가이드의 목적은 두개다:
+
 1. convolutional layers와 transposed convolutional layers과의 관계에 대해 설명.
 2. [input shape, kernel shape, zero padding, strides and output shape in convolutional, pooling and transposed convolutional layers]들의 관계에 대한 직관적인 이해.
 
