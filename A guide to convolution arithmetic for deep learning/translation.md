@@ -45,8 +45,8 @@ stride가 subsampling의 모양을 구성한다는 것을 기억하자. As an al
 
 >(그림)
 >Figure 1.3: kernel w의 3*2*3*3 콜렉션을 사용하여 두개의 input feature maps에서 세개의 output feature maps으로 나오는 convolution mapping. 왼쪽의 경로에서, input feature map 1은 kernel w1,1과 엮이고 input feature map 2는 kernel w1,2와 엮이고 결과는 요소별로 합쳐져 첫번째 output feature map을 구성한다. 같은 방법으로 가운데와 오른쪽 경로에서 두번째와 세번째 feature maps가 나오고 모든 세개의 feature maps는 함께 묶어서 output을 이룬다.
->(그림)
 
+>(그림)
 >Figure 1.4: stirde들을 보는 선택적인 방법. 3*3 kernel을 왼쪽처럼 s=2로 하여 이동하는 대신, 오른쪽처럼 kernel을 1만큼 움직이고 output의 원소들을 s=2로 움직여 둘중 하나만 유지시킨다.
 
 ##1.2 Pooling
