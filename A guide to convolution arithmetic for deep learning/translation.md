@@ -29,11 +29,11 @@ Neural networks의 가장 기본적인 개념은 아핀 변환(y = Ax + b, input
 Figure 1.1 은 discrete convolution에 관한 예이다. 하늘색의 그리드는 input feature map이라 부른다. 그림을 간단히 하기 위해 오직 한개의 input feature map을 주지만 한개의 feature map위에 다른 feature map 여러개가 쌓이는건 이상한 일이 아니다. 값의 Kernel (어두운 구역)은 input feature map을 다 지나간다. 각 위치에서, kernel의 각 원소와 input 원소의 곱들이 계산되고 이들의 합이 현재 위치의 output이 된다. 이 절차는 원하는 만큼 다양한 결과를 내기 위해 다른 kernel을 사용하여 반복될 수 있다 (Figure 1.3). 이 절차의 최종 output은 output feature maps이라 불린다. 만약 input feature map이 한개가 아니었다면, kernel은 3차원이 되거나 distinct kernel과 각 feature map이 엮여서 결과가 되는 feature map들은 output feature map을 만들기 위해 더해져야 할 것이다 (둘은 실질적으로 같음).
 Figure 1.1에서 설명했던 convolution은 2차원 convolution의 인스턴스이지만, 이건 N차원으로 일반화할 수 있다. 예를 들어, 3차원 convolution에서는 kernel은 직육면체가 되어 가로 세로 깊이로 input feature map을 지나간다.
 Discrete convolution을 정의하는 kernel의 콜렉션은 순열 (n, m, k1, …, kN) 과 같은 모양을 가지고 있는데 이때
-n = output feature map의 개수
-m = input feature map의 개수
-kj = j축에서의 kernel의 크기
+* n = output feature map의 개수
+* m = input feature map의 개수
+* kj = j축에서의 kernel의 크기
 
-축 j에 따라, 다음 속성들은 convolutional layer output의 크기인 oj에 영향을 미칩니다:
+축 j에 따라, 다음 속성들은 convolutional layer output의 크기인 oj에 영향을 미친다:
 
 * ij: 축 j의 input size
 * kj: 축 j의 kernel size
