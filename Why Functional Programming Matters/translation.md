@@ -62,4 +62,157 @@ sum nil = 0
 sum (cons num list) = num + sum list
 ```
 
-로 정의할 수 있다.
+로 정의할 수 있다. 이 정의를 살펴보면, 우리는 아래 박스 부분만 합을 계산하는 부분이라는 것을 알 수 있다.
+
+```
+          +---+
+sum nil = | 0 |
+          +---+
+                          +---+
+sum (cons num list) = num | + | sum list
+                          +---+
+```
+
+이것은 합의 계산이 박스 부분을 재귀적 패턴으로 `접착`해서 모듈화될 수 있음을 보여준다. 이 재귀적 패턴은 보통 `reduce`라고 불리며 합은 다음과 같이
+
+```
+sum = reduce add 0
+```
+
+로 나타낼 수 있고, 편의를 위해 `reduce`는 연산자 대신 함수 `add`를 포함한 두 매개변수를 넘겨받는다. 함수 `add`는 단순하게 다음과 같이 정의된다.
+
+```
+add x y = x + y
+```
+
+`reduce`의 정의는 `sum`의 정의를 인수화 함으로써 나타낼 수 있다.
+
+```
+(reduce f x) nil = x
+(reduce f x) (cons a l) = f a ((reduce f x) l)
+```
+
+우리는 `reduce f x`을 괄호로 둘러싸서 이게 `sum`을 대체함을 분명히 하였다. 보통 괄호는 생략하여 표기하므로 `((reduce f x) l)`은 `(reduce f x l)`로 나타낼 수 있다. `reduce`와 같이 세개의 인자를 받는 함수는 두개의 인자를 받고 나머지 한개의 인자를 받는 함수를 리턴한다. 보통, n개의 인자를 받는 함수가 n보다 작은 m개의 인자를 받는다면, 이 값은 나머지 n - m개의 인자를 받는 함수가 될 것이다. 우리는 이 것을 나중에 볼 것이다.
+
+이 방법으로 합 구하기를 모듈화 함으로써 우리는 각 파트들을 재사용하는 이득을 얻을 수 있었다. 가장 흥미로운 부분은 `reduce`이다. 이것을 사용해 우리는 더 프로그램을 작성할 필요 없이 리스트의 각 원소를 곱하는 함수를 작성할 수 있다.
+
+```
+product = reduce multiply 1
+```
+
+또한 우리는 리스트에서 참인 원소가 존재하는지 확인하는 코드를 짤 수도 있고
+
+```
+anytrue = reduce or false
+```
+
+모두가 참인지 확인하는 코드도 짤 수 있다.
+
+````
+alltrue = reduce and true
+````
+
+`(reduce f a)`는 list에 있는 모든 cons들을 f로 대체하고 nil을 a로 대체하는 것이다. 예를 들어, 리스트 `[1, 2, 3]`는
+
+```
+cons 1 (cons 2 (cons 3 nil))
+```
+
+이고, `(reduce add 0)`은 이것을 다음과 같이 바꾼다.
+
+```
+add 1 (add 2 (add 3 0)) = 6
+```
+
+그리고 `(reduce multiply 1)`은 다음과 같이 바뀐다.
+
+```
+multiply 1 (multiply 2 (multiply 3 1)) = 6
+```
+
+그렇다면 이제 `(reduce cons nil)`은 리스트를 단순히 복사한다는 것은 당연하다. 한 리스트의 맨앞에 원소를 `cons`함으로써 리스트에 값이 추가됨을 앎으로써, 우리는
+
+```
+append a b = reduce cons b a
+```
+
+를 알아낼 수 있다. 예를 들어,
+
+```
+append [1,2] [3,4] = reduce cons [3,4] [1,2]
+                   = (reduce cons [3,4]) (cons 1 (cons 2 nil))
+                   = cons 1 (cons 2 [3,4]) 
+                        (replacing cons by cons and nil by [3,4])
+                   = [1,2,3,4]
+```
+
+모든 원소를 두배로 만드는 함수는 다음과 같이 작성할 수 있다.
+
+```
+		doubleall = reduce doubleandcons nil
+where	doubleandcons num list = cons (2*num) list
+```
+
+함수 `doubleandcons`는 좀 더 모듈화할 수도 있다. 먼저
+
+```
+		doubleandcons = fandcons double
+where	double n = 2*n
+		fandcons f el list = cons (f el) list
+```
+
+그리고 이는
+
+```
+fandcons f = cons . f
+```
+
+로 함수를 합성하는 연산자 `.`로 나타낼 수 있고, 이 연산자는 
+
+```
+(f . g) h = f (g h)
+```
+
+로 정의된다. 우리는 `fandcons`의 새로운 정의가 몇 인자를 줌으로써 맞는지 확인할 수 있다:
+
+```
+		fandcons f el = (cons . f) el
+		              = cons (f el)
+so		fandcons f el list = cons (f el) list
+```
+
+최종 버젼은 다음과 같다.
+
+```
+doubleall = reduce (cons . double) nil
+```
+
+한단계 더 모듈화를 하면 우리는
+
+```
+doubleall = map double
+map f = reduce (cons . f) nil
+```
+
+와 같이 어떤 함수 f를 리스트의 모든 원소에 적용하는 함수 `map`을 사용하여 나타낼 수 있다. 함수 `map`도 자주 쓰이는 유용한 함수이다.
+
+심지어 우리는 리스트들의 리스트인 행렬의 모든 원소를 더하는 함수를 작성할 수도 있다.
+
+```
+summatrix = sum . map sum
+```
+
+`map sum`은 `sum`을 가로 행값을 전부 더하는데 사용하고, 가장 왼쪽의 `sum`은 가로 행의 결과값을 더해 전체 매트릭스의 합을 구해낸다.
+
+이러한 예제들은 작은 모듈화로도 큰 변화를 가질 수 있음을 보여준다. 간단한 함수 `(sum)`을 고차 함수들과 인자들의 조합으로 모듈화함으로써 우리는 `(reduce)`이라고 하는 추가적인 노력 없이 많은 리스트를 다루는 함수들에 사용되는 파트에 도달할 수 있었다. 우리는 리스트를 다루는 함수에서 멈춰서는 안된다. 다른 예제로, 다음과 같이 정의되는 트리 자료형에 대해 알아보자.
+
+```
+treeof X ::= node X (listof (treeof X))
+```
+
+이 정의는 X들의 트리가 X라는 라벨을 가진 노드이고, 하위 트리들은 또 X의 트리들을 가짐을 보여준다. 예를 들어, 다음과 같은 트리
+
+```
+이걸 그리라고? 미쳤냐?
+```
+
