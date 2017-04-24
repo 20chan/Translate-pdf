@@ -149,16 +149,16 @@ append [1,2] [3,4] = reduce cons [3,4] [1,2]
 모든 원소를 두배로 만드는 함수는 다음과 같이 작성할 수 있다.
 
 ```
-		doubleall = reduce doubleandcons nil
-where	doubleandcons num list = cons (2*num) list
+      doubleall = reduce doubleandcons nil
+where doubleandcons num list = cons (2*num) list
 ```
 
 함수 `doubleandcons`는 좀 더 모듈화할 수도 있다. 먼저
 
 ```
-		doubleandcons = fandcons double
-where	double n = 2*n
-		fandcons f el list = cons (f el) list
+      doubleandcons = fandcons double
+where double n = 2*n
+      fandcons f el list = cons (f el) list
 ```
 
 그리고 이는
@@ -176,9 +176,9 @@ fandcons f = cons . f
 로 정의된다. 우리는 `fandcons`의 새로운 정의가 몇 인자를 줌으로써 맞는지 확인할 수 있다:
 
 ```
-		fandcons f el = (cons . f) el
-		              = cons (f el)
-so		fandcons f el list = cons (f el) list
+   fandcons f el = (cons . f) el
+                 = cons (f el)
+so fandcons f el list = cons (f el) list
 ```
 
 최종 버젼은 다음과 같다.
@@ -213,6 +213,56 @@ treeof X ::= node X (listof (treeof X))
 이 정의는 X들의 트리가 X라는 라벨을 가진 노드이고, 하위 트리들은 또 X의 트리들을 가짐을 보여준다. 예를 들어, 다음과 같은 트리
 
 ```
-이걸 그리라고? 미쳤냐?
+1 -- 3 -- 4
+ \---2
 ```
 
+는
+
+```
+node 1
+    (cons (node 2 nil)
+          (cons (node 3
+                      (cons (node 4 nil) nil))
+                nil))
+```
+
+로 나타낼 수 있다. 예를 들거나 고차 함수를 추상화하는 대신, 우리는 `reduce`와 비슷한 함수 `redtree (reduce tree)`를 바로 만들어 볼 것이다. `reduce`가 두개의 인자를 받는다는 것을 기억하자. `cons`를 대체할 무언가와 `nil`을 대체할 무언가 말이다. 트리가 노드, `cons`, `nil`로 이루어진다는 걸 볼때, `redtree`는 세개의 인자를 받아야 한다 - 각각을 대체할 것들 말이다. 트리와 리스트가 매우 다른 타입임을 볼 때, 우리는 두개의 함수를 정의할 것이다.
+```
+redtree f g a (node label subtrees) = 
+        f label (redtree' f g a subtrees)
+redtree' f g a (cons subrtree rest) = 
+        g (redtree f g a subtree) (redtree' f g a rest)
+redtree' f g a nil = a
+```
+많은 흥미로운 함수가 `redtree`와 다른 함수를 함께 접착함으로써 정의될 수 있다. 예를 들어, 트리의 라벨인 숫자들은 다음을 이용하여 전부 더해질 수 있다.
+```
+sumtree = redtree add add 0
+```
+방금 썼던 예제에 `sumtree`를 사용하면 다음과 같은 결과가 나온다.
+```
+add 1
+    (add (add 2 0)
+         (add (add 3
+                   (add (add 4 0) 0))
+              0))
+= 10
+```
+트리의 모든 라벨의 리스트는 다음으로 게산될 수 있다.
+```
+labels = redtree cons append nil
+```
+같은 예제를 사용하면,
+```
+cons 1
+     (append (cons 2 nil)
+             (append (cons 3
+                           (append (cons 4 nil) nil))
+                     nil))
+= [1,2,3,4]
+```
+마지막으로, `map`과 비슷하게 트리의 모든 라벨에 함수 `f`를 적용시키는 함수는 다음과 같이 정의된다.
+```
+maptree f = redtree (node . f) cons nil
+```
+이 모든것은 함수형 언어가 기존의 언어에서는 되지 않는 고차 함수와 구체화 함수들의 결합을 허용했기 때문에 이뤄질 수 있다. 이러한 고차 함수가 정의되면 많은 작업들이 매우 쉽게 할 수 있다. 새로운 데이터 타입이 정의될 때마다 이를 처리하는 고차함수도 작성되어야 한다. 이것은 데이터 타입을 쉽게 다룰 수 있게 해주고, 또한 이것의 자세한 세부적인 부분들을 잘 알 수 있게 해준다. 기존의 프로그래밍과 가장 비교되는 부분은 이 확장가능한 언어이다. 이것은 프로그래밍 언어가 언제든지 새로운 제어구조로 확장 가능하다는 것이다.
