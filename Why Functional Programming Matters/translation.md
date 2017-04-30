@@ -335,4 +335,14 @@ within eps (cons a (cons b res)) =
 ```
 sqrt a0 eps N = within eps (repeat (next N) a0)
 ```
-이제 우리는 제곱근의 값을 구하는 파트들을 가지고 있으니 이것들을 다른 방법으로 결합해볼 것이다. 우리가 수정하려고 하는 것은 바로 근사값
+이제 우리는 제곱근의 값을 구하는 파트들을 가지고 있으니 이것들을 다른 방법으로 결합해볼 것이다. 우리가 수정하려고 하는 것은 바로 리스트의 첫 두 근사값의 차가 0이 되는거보다 비가 1에 가까워지는것을 기다리는 것이다. 이것은 값의 차가 시작하기 너무 작은 작은 숫자들이나 매우 큰 숫자들에 에 대해 더 적절한 방법이다. 이를 위해, 우리는 그냥 `within`의 대체를 정의하면 된다.
+```
+relative eps (cons a (cons b res)) = 
+          = b, if abs(a-b) <= eps*abs b
+          = relative eps (cons b res), otherwise
+```
+이제 `sqrt`의 새로운 버젼은 다음과 같다.
+```
+relativesqrt a0 eps N = relative eps (repeat (next N) a0)
+```
+근사값을 생성하는 파트부터 재작성할 필요가 없다!
